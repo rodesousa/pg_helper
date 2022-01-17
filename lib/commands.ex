@@ -81,5 +81,18 @@ defmodule PgHelper.Commands do
     """
     |> query
   end
-end
 
+  @doc """
+  Find statistics about the queries tracked by running
+  source: http://www.louisemeta.com/blog/pg-stat-statements/
+  """
+  def pg_stat_statements_statistic do
+    """
+    SELECT total_time, min_time, max_time, mean_time, calls, query
+    FROM pg_stat_statements
+    ORDER BY mean_time DESC
+    LIMIT 100;
+    """
+    |> query
+  end
+end
