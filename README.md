@@ -19,3 +19,7 @@ Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_do
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at <https://hexdocs.pm/pg_helper>.
 
+## Livebook
+
+- Follow [running livebook documentation](https://github.com/livebook-dev/livebook#usage)
+- Import [livebook.livemd](./livebook.livemd) in your livebook instance

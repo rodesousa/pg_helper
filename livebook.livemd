@@ -1,0 +1,111 @@
+# Pg_Helper
+
+## Deps
+
+```elixir
+Mix.install([
+  {:pg_helper, github: "rodesousa/pg_helper", branch: "master"},
+  {:kino, "~> 0.5.1"}
+])
+```
+
+<!-- livebook:{"branch_parent_index":0} -->
+
+## Setup
+
+* Hostname: IP or machine name
+* db: Database name
+* username: username with **pg stat statement enabled** [documentation](https://www.postgresql.org/docs/9.5/pgstatstatements.html)
+* password: username password
+
+```elixir
+inputs = [
+  hostname: Kino.Input.text("Hostname"),
+  db: Kino.Input.text("Database name"),
+  username: Kino.Input.text("Username"),
+  password: Kino.Input.password("Password")
+]
+
+form = Kino.Control.form(inputs, submit: "Save")
+```
+
+```elixir
+for %{data: data} <- Kino.Control.stream(form) do
+  System.put_env("DATALAKE_USERNAME", data.username)
+  System.put_env("DATALAKE_PASSWORD", data.password)
+  System.put_env("DATALAKE_DB", data.db)
+  System.put_env("DATALAKE_HOSTNAME", data.hostname)
+
+  IO.inspect("Update !")
+end
+```
+
+<!-- livebook:{"branch_parent_index":0} -->
+
+## Commands
+
+If you change env variables you have to uncomment `PgHelper.Repo.stop()` and comment `PgHelper.init_db()
+`
+
+```elixir
+PgHelper.init_db()
+# PgHelper.Repo.stop()
+```
+
+```elixir
+PgHelper.Commands.diagnose()
+```
+
+## Index and table hit rate
+
+```elixir
+EctoPSQLExtras.cache_hit(PgHelper.Repo)
+```
+
+## Index rate
+
+```elixir
+EctoPSQLExtras.index_usage(PgHelper.Repo)
+```
+
+## pg state statements ordered by the amount of time to execute
+
+```elixir
+EctoPSQLExtras.outliers(PgHelper.Repo, args: [limit: 10])
+```
+
+## Index size
+
+```elixir
+EctoPSQLExtras.index_size(PgHelper.Repo)
+```
+
+## Table size
+
+```elixir
+EctoPSQLExtras.table_size(PgHelper.Repo)
+```
+
+## table_indexes_size
+
+```elixir
+EctoPSQLExtras.table_indexes_size(PgHelper.Repo)
+```
+
+## unused_indexes
+
+```elixir
+EctoPSQLExtras.unused_indexes(PgHelper.Repo, args: [min_scans: 20])
+```
+
+## seq scan
+
+```elixir
+EctoPSQLExtras.seq_scans(PgHelper.Repo)
+```
+
+## vacuum_stats
+
+```elixir
+EctoPSQLExtras.vacuum_stats(PgHelper.Repo)
+```
